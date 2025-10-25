@@ -125,6 +125,18 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
 });
+document.addEventListener('DOMContentLoaded', function() {
+  // Scroll to products on arrow click
+  document.getElementById('scroll-btn').addEventListener('click', function() {
+    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+  });
 
+  // Scroll to products on down arrow key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === "ArrowDown") {
+      document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
 // Initialize
 loadProducts();

@@ -37,6 +37,3 @@ body{margin:0;padding:0;background:var(--bg);color:#333;line-height:1.4;}
 .input-row input{padding:8px;border-radius:8px;border:1px solid #eee;}
 .site-footer{text-align:center;margin-top:36px;color:var(--muted);font-size:13px;padding-bottom:20px;}
 @media(max-width:600px){.cart-panel{left:12px;right:12px;top:auto;bottom:12px}}
-html {
-  scroll-behavior: smooth;
-}

@@ -2,11 +2,17 @@ const WHATSAPP_NUMBER = "919061637881";
 let products = [];
 let cart = {};
 
-// Load products from JSON
+// Load products from JSON (GitHub Pages safe)
 async function loadProducts() {
-  const res = await fetch('products.json');
-  products = await res.json();
-  renderProducts();
+  try {
+    const res = await fetch('./products.json'); // Ensure products.json is in same folder
+    if (!res.ok) throw new Error('Failed to fetch products.json');
+    products = await res.json();
+    renderProducts();
+  } catch (err) {
+    console.error(err);
+    document.getElementById('products').innerHTML = "<p style='text-align:center;color:#888;'>Failed to load products.</p>";
+  }
 }
 
 // Render product cards
@@ -31,10 +37,9 @@ function renderProducts() {
     container.appendChild(el);
   });
 
+  // Attach add button listeners
   document.querySelectorAll('.add-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
-      addToCart(e.currentTarget.dataset.id);
-    });
+    btn.addEventListener('click', e => addToCart(e.currentTarget.dataset.id));
   });
 }
 
@@ -47,7 +52,7 @@ function addToCart(id) {
   updateCartUI();
 }
 
-// Update cart UI
+// Update cart panel UI
 function updateCartUI() {
   const count = Object.values(cart).reduce((s, i) => s + i.qty, 0);
   document.getElementById('cart-count').textContent = count;
@@ -77,7 +82,7 @@ function updateCartUI() {
     itemsDiv.appendChild(node);
   });
 
-  // Add event listeners for plus/minus buttons
+  // Attach plus/minus buttons
   itemsDiv.querySelectorAll('button').forEach(btn => {
     btn.addEventListener('click', e => {
       const id = e.currentTarget.dataset.id;
@@ -94,25 +99,24 @@ function updateCartUI() {
   });
 }
 
-// Toggle cart panel
+// Cart panel toggle
 document.getElementById('cart-btn').addEventListener('click', () => {
   const panel = document.getElementById('cart-panel');
   panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
 });
-
 document.getElementById('close-cart').addEventListener('click', () => {
   document.getElementById('cart-panel').style.display = 'none';
 });
 
 // WhatsApp checkout
 document.getElementById('checkout-btn').addEventListener('click', () => {
-  const name = document.getElementById('cust-name').value;
-  const note = document.getElementById('cust-note').value;
-
   if (Object.keys(cart).length === 0) {
     alert('Cart is empty!');
     return;
   }
+
+  const name = document.getElementById('cust-name').value;
+  const note = document.getElementById('cust-note').value;
 
   let msg = 'Order from ZuZuBee:\n';
   Object.values(cart).forEach(item => {
@@ -125,19 +129,24 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
 });
-// Smooth scroll to products on click or down arrow
-document.addEventListener('DOMContentLoaded', function() {
-  // Scroll to products on arrow click
-  document.getElementById('scroll-btn').addEventListener('click', function() {
-    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
-  });
 
-  // Scroll to products on down arrow key
-  document.addEventListener('keydown', function(e) {
+// Scroll arrow & down key
+document.addEventListener('DOMContentLoaded', function() {
+  const scrollBtn = document.getElementById('scroll-btn');
+  if (scrollBtn) {
+    scrollBtn.addEventListener('click', () => {
+      const productsSection = document.getElementById('products');
+      productsSection.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+
+  document.addEventListener('keydown', e => {
     if (e.key === "ArrowDown") {
-      document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+      const productsSection = document.getElementById('products');
+      productsSection.scrollIntoView({ behavior: 'smooth' });
     }
   });
 });
+
 // Initialize
 loadProducts();

@@ -1,5 +1,5 @@
 // WhatsApp number (update when ready) - set without + or spaces for the wa.me link
-const WHATSAPP_NUMBER = "919999999999"; // corresponds to +91 9999999999
+const WHATSAPP_NUMBER = "919061637881"; // corresponds to +91 9999999999
 
 let products = [];
 let cart = {};

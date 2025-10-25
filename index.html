@@ -5,54 +5,86 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HeyZuZuBee</title>
 <link rel="stylesheet" href="styles.css">
+<style>
+  /* Smooth scrolling for all anchor links */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Scroll prompt styling */
+  #scroll-btn {
+    cursor: pointer;
+    color: #aaa;
+    font-size: 16px;
+    margin-top: 20px;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  #scroll-btn:hover {
+    color: #555;
+  }
+
+  /* Hero section logo */
+  .hero .logo img {
+    width: 100px; /* adjust size as needed */
+    height: auto;
+    display: block;
+    margin: 0 auto 20px auto;
+  }
+</style>
 </head>
 <body>
 
-
 <!-- Hero / Welcome Section -->
 <section class="hero">
-<div class="logo">"images/LOGO.jpg"</div>
-<h1>HeyZuZuBee</h1>
-<p>Welcome to ZuZuBee<br>The Art of Gifting</p>
-<p id="scroll-btn" style="font-size:16px;color:#aaa;margin-top:20px;cursor:pointer;">
-  ↓ Scroll to explore gifts
-</p>
-  <p style="font-size:16px;color:#aaa;margin-top:20px;">
-  <a href="#products" style="text-decoration:none;color:#aaa;">↓ Scroll to explore gifts</a>
-</p>
+  <div class="logo">
+    <img src="images/LOGO.jpeg" alt="HeyZuZuBee Logo">
+  </div>
+  <h1>HeyZuZuBee</h1>
+  <p>Welcome to HeyZuZuBee<br>The Art of Gifting, Curated Just for You</p>
+  <p id="scroll-btn">↓ Scroll to explore gifts</p>
 </section>
-
 
 <!-- Products Grid -->
 <section class="products" id="products">
-<!-- JS will render product cards here -->
+  <!-- JS will render product cards here -->
 </section>
-
 
 <!-- Cart Button -->
 <button id="cart-btn" class="cart-btn">Cart (<span id="cart-count">0</span>)</button>
 
-
 <!-- Cart Panel -->
 <div id="cart-panel" class="cart-panel">
-<h3>Your Cart</h3>
-<div id="cart-items"></div>
-<div class="cart-summary">Total: ₹<span id="cart-total">0.00</span></div>
-<div class="input-row">
-<input type="text" id="cust-name" placeholder="Your Name (optional)">
-<input type="text" id="cust-note" placeholder="Note / Address (optional)">
+  <h3>Your Cart</h3>
+  <div id="cart-items"></div>
+  <div class="cart-summary">Total: ₹<span id="cart-total">0.00</span></div>
+  <div class="input-row">
+    <input type="text" id="cust-name" placeholder="Your Name (optional)">
+    <input type="text" id="cust-note" placeholder="Note / Address (optional)">
+  </div>
+  <button id="checkout-btn" class="wh-btn">Checkout</button>
+  <button id="close-cart" class="close">Close</button>
 </div>
-<button id="checkout-btn" class="wh-btn">Checkout</button>
-<button id="close-cart" class="close">Close</button>
-</div>
-
 
 <!-- Footer -->
 <footer class="site-footer">
-&copy; 2025 HeyZuZuBee. All rights reserved.
+  &copy; 2025 HeyZuZuBee. All rights reserved.
 </footer>
 
-
 <script src="app.js"></script>
+<script>
+  // Smooth scroll to products on click
+  document.getElementById('scroll-btn').addEventListener('click', function() {
+    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // Scroll to products when down arrow key is pressed
+  document.addEventListener('keydown', function(e) {
+    if (e.key === "ArrowDown") {
+      document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+</script>
 </body>
 </html>

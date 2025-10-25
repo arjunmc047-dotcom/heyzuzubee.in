@@ -1,49 +1,53 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>HeyZuZuBee — Catalog</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeyZuZuBee</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="brand">
-      <div class="logo">🐝</div>
-      <div class="titles">
-        <h1>HeyZuZuBee</h1>
-        <p class="tag">The Art of Gifting</p>
-      </div>
-    </div>
-    <button id="cart-btn" class="cart-btn">Cart (<span id="cart-count">0</span>)</button>
-  </header>
 
-  <main>
-    <section class="products" id="products"></section>
 
-    <aside class="cart-panel" id="cart-panel">
-      <h2>Your Cart</h2>
-      <div id="cart-items"></div>
-      <div class="cart-summary">
-        <div>Total: ₹<span id="cart-total">0.00</span></div>
-      </div>
-      <label class="input-row">
-        <span>Your name</span>
-        <input id="cust-name" placeholder="Optional" />
-      </label>
-      <label class="input-row">
-        <span>Delivery details</span>
-        <input id="cust-note" placeholder="Address / note (optional)" />
-      </label>
-      <button id="checkout-btn" class="wh-btn">Checkout via WhatsApp</button>
-      <button id="close-cart" class="close">Close</button>
-    </aside>
-  </main>
+<!-- Hero / Welcome Section -->
+<section class="hero">
+<div class="logo">🐝</div>
+<h1>HeyZuZuBee</h1>
+<p>Welcome to HeyZuZuBee<br>The Art of Gifting, Curated Just for You</p>
+<p style="font-size:16px;color:#aaa;margin-top:20px;">↓ Scroll to explore gifts</p>
+</section>
 
-  <footer class="site-footer">
-    <p>Designed for HeyZuZuBee · Pastel & cute</p>
-  </footer>
 
-  <script src="app.js"></script>
+<!-- Products Grid -->
+<section class="products" id="products">
+<!-- JS will render product cards here -->
+</section>
+
+
+<!-- Cart Button -->
+<button id="cart-btn" class="cart-btn">Cart (<span id="cart-count">0</span>)</button>
+
+
+<!-- Cart Panel -->
+<div id="cart-panel" class="cart-panel">
+<h3>Your Cart</h3>
+<div id="cart-items"></div>
+<div class="cart-summary">Total: ₹<span id="cart-total">0.00</span></div>
+<div class="input-row">
+<input type="text" id="cust-name" placeholder="Your Name (optional)">
+<input type="text" id="cust-note" placeholder="Note / Address (optional)">
+</div>
+<button id="checkout-btn" class="wh-btn">Checkout</button>
+<button id="close-cart" class="close">Close</button>
+</div>
+
+
+<!-- Footer -->
+<footer class="site-footer">
+&copy; 2025 HeyZuZuBee. All rights reserved.
+</footer>
+
+
+<script src="app.js"></script>
 </body>
 </html>

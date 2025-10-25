@@ -125,6 +125,7 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
 });
+// Smooth scroll to products on click or down arrow
 document.addEventListener('DOMContentLoaded', function() {
   // Scroll to products on arrow click
   document.getElementById('scroll-btn').addEventListener('click', function() {

@@ -1,11 +1,65 @@
 [
-{"id":"p1","name":"Mini Gift Box","description":"A cute little gift box with surprises.","price":299,"image":"images/product1.svg"},
-{"id":"p2","name":"Scented Candle","description":"A relaxing scented candle for cozy evenings.","price":499,"image":"images/product2.svg"},
-{"id":"p3","name":"Handmade Soap","description":"Natural handmade soap with floral fragrance.","price":199,"image":"images/product3.svg"},
-{"id":"p4","name":"Greeting Card","description":"Beautiful greeting card for special occasions.","price":99,"image":"images/product4.svg"},
-{"id":"p5","name":"Keychain Set","description":"Set of 3 cute keychains.","price":149,"image":"images/product5.svg"},
-{"id":"p6","name":"Notebook","description":"Stylish notebook for your thoughts.","price":249,"image":"images/product6.svg"},
-{"id":"p7","name":"Tea Sampler","description":"Assorted tea flavors in one box.","price":399,"image":"images/product7.svg"},
-{"id":"p8","name":"Succulent Plant","description":"Small potted succulent to brighten your space.","price":349,"image":"images/product8.svg"},
-{"id":"p9","name":"Chocolate Box","description":"Premium assorted chocolates.","price":599,"image":"images/product9.svg"}
+  {
+    "id": "p1",
+    "name": "Pretty Gift 1",
+    "price": 248,
+    "description": "A cute gift item #1 \u2014 perfect for small surprises.",
+    "image": "images/product1.svg"
+  },
+  {
+    "id": "p2",
+    "name": "Pretty Gift 2",
+    "price": 297,
+    "description": "A cute gift item #2 \u2014 perfect for small surprises.",
+    "image": "images/product2.svg"
+  },
+  {
+    "id": "p3",
+    "name": "Pretty Gift 3",
+    "price": 346,
+    "description": "A cute gift item #3 \u2014 perfect for small surprises.",
+    "image": "images/product3.svg"
+  },
+  {
+    "id": "p4",
+    "name": "Pretty Gift 4",
+    "price": 395,
+    "description": "A cute gift item #4 \u2014 perfect for small surprises.",
+    "image": "images/product4.svg"
+  },
+  {
+    "id": "p5",
+    "name": "Pretty Gift 5",
+    "price": 444,
+    "description": "A cute gift item #5 \u2014 perfect for small surprises.",
+    "image": "images/product5.svg"
+  },
+  {
+    "id": "p6",
+    "name": "Pretty Gift 6",
+    "price": 493,
+    "description": "A cute gift item #6 \u2014 perfect for small surprises.",
+    "image": "images/product6.svg"
+  },
+  {
+    "id": "p7",
+    "name": "Pretty Gift 7",
+    "price": 542,
+    "description": "A cute gift item #7 \u2014 perfect for small surprises.",
+    "image": "images/product7.svg"
+  },
+  {
+    "id": "p8",
+    "name": "Pretty Gift 8",
+    "price": 591,
+    "description": "A cute gift item #8 \u2014 perfect for small surprises.",
+    "image": "images/product8.svg"
+  },
+  {
+    "id": "p9",
+    "name": "Pretty Gift 9",
+    "price": 640,
+    "description": "A cute gift item #9 \u2014 perfect for small surprises.",
+    "image": "images/product9.svg"
+  }
 ]

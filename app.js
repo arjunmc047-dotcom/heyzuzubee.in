@@ -54,3 +54,6 @@ node.innerHTML=`
 <div style="margin-top:6px">
 <button class="btn" data-op="minus" data-id="${item.id}">-</button>
 loadProducts();
+document.getElementById('scroll-btn').addEventListener('click', function() {
+    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+});

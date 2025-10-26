@@ -49,7 +49,7 @@ function renderProducts() {
     container.appendChild(el);
   });
 
-  // Quantity + / − buttons
+  // Quantity + / − buttons on product cards
   document.querySelectorAll('.increase').forEach(btn => {
     btn.addEventListener('click', e => {
       const id = e.currentTarget.dataset.id;
@@ -59,7 +59,7 @@ function renderProducts() {
       qtyEl.textContent = qty;
 
       const addBtn = document.querySelector(`.add-btn[data-id="${id}"]`);
-      if (addBtn) addBtn.disabled = qty === 0 ? true : false;
+      if (addBtn) addBtn.disabled = qty === 0;
     });
   });
 
@@ -88,7 +88,7 @@ function renderProducts() {
       if (quantity <= 0) return;
 
       addToCart(id, quantity);
-      qtyEl.textContent = '0'; 
+      qtyEl.textContent = '0';
       e.currentTarget.disabled = true;
     });
   });
@@ -112,7 +112,7 @@ function renderProducts() {
   });
 }
 
-// Add item to cart with specific quantity
+// Add item to cart
 function addToCart(id, quantity) {
   const product = products.find(x => x.id === id);
   if (!product) return;
@@ -121,7 +121,17 @@ function addToCart(id, quantity) {
   updateCartUI();
 }
 
-// Update cart panel
+// Change quantity from cart panel
+function changeCartQuantity(id, delta) {
+  if (!cart[id]) return;
+  cart[id].qty += delta;
+  if (cart[id].qty <= 0) {
+    delete cart[id];
+  }
+  updateCartUI();
+}
+
+// Update cart panel and sync with product cards
 function updateCartUI() {
   const count = Object.values(cart).reduce((s, i) => s + i.qty, 0);
   document.getElementById('cart-count').textContent = count;
@@ -145,29 +155,38 @@ function updateCartUI() {
         <div style="margin-top:6px">
           <button class="btn" data-op="minus" data-id="${item.id}">-</button>
           <button class="btn" data-op="plus" data-id="${item.id}">+</button>
+          <button class="btn" data-op="remove" data-id="${item.id}">Remove</button>
         </div>
       </div>
     `;
     itemsDiv.appendChild(node);
   });
 
+  // Cart panel buttons
   itemsDiv.querySelectorAll('button').forEach(btn => {
     btn.addEventListener('click', e => {
       const id = e.currentTarget.dataset.id;
-      if (e.currentTarget.dataset.op === 'minus') {
-        changeQuantity(id, -1);
-      } else {
-        changeQuantity(id, 1);
+      const op = e.currentTarget.dataset.op;
+      if (op === 'minus') changeCartQuantity(id, -1);
+      else if (op === 'plus') changeCartQuantity(id, 1);
+      else if (op === 'remove') {
+        delete cart[id];
+        updateCartUI();
       }
     });
   });
 
-  // Update product card quantity display
+  // Sync quantities with product cards
   products.forEach(p => {
     const qtyEl = document.getElementById(`qty-${p.id}`);
-    qtyEl.textContent = '0';
     const addBtn = document.querySelector(`.add-btn[data-id="${p.id}"]`);
-    if (addBtn) addBtn.disabled = true;
+    if (cart[p.id]) {
+      qtyEl.textContent = cart[p.id].qty;
+      addBtn.disabled = false;
+    } else {
+      qtyEl.textContent = '0';
+      addBtn.disabled = true;
+    }
   });
 }
 
@@ -213,7 +232,8 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
   msg += `Total: ₹${total.toFixed(2)}\n\n`;
   msg += `👤 Name: ${name}\n🏠 Address/Note: ${note}`;
   msg += `\nPlease share the payment details`;
-window.open(`${WHATSAPP_LINK}?text=${encodeURIComponent(msg)}`, '_blank');
+
+  window.open(`${WHATSAPP_LINK}?text=${encodeURIComponent(msg)}`, '_blank');
 });
 
 // Scroll down button

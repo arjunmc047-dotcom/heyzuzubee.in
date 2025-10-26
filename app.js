@@ -19,20 +19,58 @@ async function loadProducts() {
 function renderProducts() {
   const container = document.getElementById('products');
   container.innerHTML = '';
+
   products.forEach(p => {
     const el = document.createElement('article');
     el.className = 'card';
+
+    // Create image slider container
+    const imagesHtml = p.images.map((img, index) => `
+      <img src="${img}" class="slide ${index === 0 ? 'active' : ''}" alt="${p.name}">
+    `).join('');
+
     el.innerHTML = `
-      <img src="${p.image}" alt="${p.name}" loading="lazy"/>
+      <div class="slider" data-id="${p.id}">
+        ${imagesHtml}
+        <button class="nav prev">‹</button>
+        <button class="nav next">›</button>
+      </div>
       <h3>${p.name}</h3>
       <p>${p.description}</p>
       <div class="row">
         <div>₹${p.price.toFixed(2)}</div>
         <div class="qty">
-          <button class="btn add-btn" data-id="${p.id}">+</button>
+          <button class="btn add-btn" data-id="${p.id}">Add</button>
           <span class="item-qty" id="qty-${p.id}">0</span>
         </div>
       </div>
+    `;
+    container.appendChild(el);
+  });
+
+  // Add functionality for Add buttons
+  document.querySelectorAll('.add-btn').forEach(btn => {
+    btn.addEventListener('click', e => addToCart(e.currentTarget.dataset.id));
+  });
+
+  // Add functionality for image sliders
+  document.querySelectorAll('.slider').forEach(slider => {
+    const slides = slider.querySelectorAll('.slide');
+    let current = 0;
+
+    slider.querySelector('.next').addEventListener('click', () => {
+      slides[current].classList.remove('active');
+      current = (current + 1) % slides.length;
+      slides[current].classList.add('active');
+    });
+
+    slider.querySelector('.prev').addEventListener('click', () => {
+      slides[current].classList.remove('active');
+      current = (current - 1 + slides.length) % slides.length;
+      slides[current].classList.add('active');
+    });
+  });
+}
     `;
     container.appendChild(el);
   });

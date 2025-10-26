@@ -25,9 +25,9 @@
   {
     "id": "p4",
     "name": "Pretty Gift 4",
-    "price": 395,
-    "description": "A cute gift item #4 — perfect for small surprises.",
-    "images": ["images/product4.svg"]
+    "price": ,
+    "description": " item #4 — coming soon.",
+    "images": ["images/comingsoon.jpeg"]
   },
   {
     "id": "p5",

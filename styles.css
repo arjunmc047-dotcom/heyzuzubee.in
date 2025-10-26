@@ -348,8 +348,9 @@ body {
 }
 
 .social-widget .social-icons a img {
-  width: 60%;
-  height: 60%;
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
 }
 
 .social-widget .social-icons a:hover {
@@ -357,6 +358,14 @@ body {
   box-shadow: 0 6px 16px rgba(0,0,0,0.3);
 }
 
+.social-widget .social-icons {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.social-widget .social-icons.show {
+    display: flex;
+    opacity: 1;
+}
 @media(max-width:600px) {
   .cart-panel {
     left: 12px;

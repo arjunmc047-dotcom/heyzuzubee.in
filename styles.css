@@ -170,6 +170,14 @@ body {
   overflow-y: auto;
 }
 
+.cart-shipping {
+  background: #fff3c2; /* subtle yellow highlight */
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
 .cart-panel.open {
   display: block;
   animation: slideIn 0.3s ease forwards;

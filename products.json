@@ -13,9 +13,9 @@
     "name": "Facechanging Keychain",
     "price": 89,
     "description": " #2 — latest gift.",
-    "images": ["images/Facechanging",
-      "images/Facechanging1",
-      "images/FacechangingA"
+    "images": ["images/Facechanging.jpg",
+      "images/Facechanging1.JPG",
+      "images/FacechangingA.JPG"
     ]
   },
   {
@@ -23,7 +23,7 @@
     "name": "Projector Camera",
     "price": 89,
     "description": "gift item #3 — memories of childhood toys.",
-    "images": ["images/Projector1"]
+    "images": ["images/Projector1.jpeg"]
   },
   {
     "id": "p4",

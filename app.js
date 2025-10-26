@@ -169,11 +169,11 @@ function updateCartUI() {
     itemsDiv.appendChild(node);
   });
 
-  // Add shipping breakdown line
-  const shippingLine = document.createElement('div');
-  shippingLine.className = 'cart-item';
-  shippingLine.innerHTML = `<strong>Shipping:</strong> ₹${shipping}`;
-  itemsDiv.appendChild(shippingLine);
+ // Add shipping breakdown line
+const shippingLine = document.createElement('div');
+shippingLine.className = 'cart-item cart-shipping';
+shippingLine.innerHTML = `Shipping: ₹${shipping === 0 ? 0 : shipping}`;
+itemsDiv.appendChild(shippingLine);
 
   // Add total line
   const totalLine = document.createElement('div');

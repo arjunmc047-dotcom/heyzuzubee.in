@@ -259,5 +259,24 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
+// Social widget toggle
+const socialToggle = document.getElementById('social-toggle');
+const socialIcons = document.querySelector('.social-icons');
+
+socialToggle.addEventListener('click', (e) => {
+  e.stopPropagation(); // prevent document click from firing
+  socialIcons.style.display = socialIcons.style.display === 'flex' ? 'none' : 'flex';
+});
+
+// Close widget when clicking outside
+document.addEventListener('click', (e) => {
+  if (!socialToggle.contains(e.target) && !socialIcons.contains(e.target)) {
+    socialIcons.style.display = 'none';
+  }
+});
+
+// Optional: Add smooth transition via CSS
+socialIcons.style.transition = 'all 0.3s ease';
+
 // Initialize
 loadProducts();

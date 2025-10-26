@@ -4,9 +4,7 @@
     "name": "Charm Bracelet",
     "price": 79,
     "description": "Char with bracelet #1 — perfect for small surprises.",
-    "images": [
-      "images/Bracelet.JPG"
-    ]
+    "images": ["images/Bracelet.JPG"]
   },
   {
     "id": "p2",
@@ -15,8 +13,7 @@
     "description": " #2 — latest gift.",
     "images": ["images/Facechanging.jpg",
       "images/Facechanging1.JPG",
-      "images/FacechangingA.JPG"
-    ]
+      "images/FacechangingA.JPG"]
   },
   {
     "id": "p3",

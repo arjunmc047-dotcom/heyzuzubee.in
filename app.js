@@ -1,4 +1,4 @@
-const WHATSAPP_NUMBER = "919061637881";
+const WHATSAPP_LINK = "https://bit.ly/Chatwithzuzubee";
 let products = [];
 let cart = {};
 
@@ -24,12 +24,10 @@ function renderProducts() {
     const el = document.createElement('article');
     el.className = 'card';
 
-    // Create image slider
     const imagesHtml = p.images.map((img, index) => `
       <img src="${img}" class="slide ${index === 0 ? 'active' : ''}" alt="${p.name}">
     `).join('');
 
-    // Product card HTML with + / − and Add button
     el.innerHTML = `
       <div class="slider" data-id="${p.id}">
         ${imagesHtml}
@@ -42,22 +40,26 @@ function renderProducts() {
         <div>₹${p.price.toFixed(2)}</div>
         <div class="qty-controls">
           <button class="btn decrease" data-id="${p.id}">−</button>
-          <span class="item-qty" id="qty-${p.id}">1</span>
+          <span class="item-qty" id="qty-${p.id}">0</span>
           <button class="btn increase" data-id="${p.id}">+</button>
-          <button class="btn add-btn" data-id="${p.id}">Add</button>
+          <button class="btn add-btn" data-id="${p.id}" disabled>Add</button>
         </div>
       </div>
     `;
     container.appendChild(el);
   });
 
-  // Quantity buttons (+ / −)
+  // Quantity + / − buttons
   document.querySelectorAll('.increase').forEach(btn => {
     btn.addEventListener('click', e => {
       const id = e.currentTarget.dataset.id;
       const qtyEl = document.getElementById(`qty-${id}`);
       let qty = parseInt(qtyEl.textContent);
-      qtyEl.textContent = qty + 1;
+      qty += 1;
+      qtyEl.textContent = qty;
+
+      const addBtn = document.querySelector(`.add-btn[data-id="${id}"]`);
+      if (addBtn) addBtn.disabled = qty === 0 ? true : false;
     });
   });
 
@@ -66,17 +68,28 @@ function renderProducts() {
       const id = e.currentTarget.dataset.id;
       const qtyEl = document.getElementById(`qty-${id}`);
       let qty = parseInt(qtyEl.textContent);
-      if (qty > 1) qtyEl.textContent = qty - 1;
+      if (qty > 0) qty -= 1;
+      qtyEl.textContent = qty;
+
+      const addBtn = document.querySelector(`.add-btn[data-id="${id}"]`);
+      if (addBtn) addBtn.disabled = qty === 0;
     });
   });
 
-  // Add to Cart button
+  // Initialize Add buttons as disabled
+  document.querySelectorAll('.add-btn').forEach(btn => btn.disabled = true);
+
+  // Add button listener
   document.querySelectorAll('.add-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       const id = e.currentTarget.dataset.id;
       const qtyEl = document.getElementById(`qty-${id}`);
       const quantity = parseInt(qtyEl.textContent);
+      if (quantity <= 0) return;
+
       addToCart(id, quantity);
+      qtyEl.textContent = '0'; 
+      e.currentTarget.disabled = true;
     });
   });
 
@@ -99,19 +112,12 @@ function renderProducts() {
   });
 }
 
-// Add item to cart (with selected quantity)
+// Add item to cart with specific quantity
 function addToCart(id, quantity) {
   const product = products.find(x => x.id === id);
   if (!product) return;
-
-  if (!cart[id]) {
-    cart[id] = { ...product, qty: 0 };
-  }
+  cart[id] = cart[id] || { ...product, qty: 0 };
   cart[id].qty += quantity;
-
-  // Reset product card quantity to 1 after adding
-  document.getElementById(`qty-${id}`).textContent = 1;
-
   updateCartUI();
 }
 
@@ -145,7 +151,6 @@ function updateCartUI() {
     itemsDiv.appendChild(node);
   });
 
-  // Cart panel +/− buttons
   itemsDiv.querySelectorAll('button').forEach(btn => {
     btn.addEventListener('click', e => {
       const id = e.currentTarget.dataset.id;
@@ -156,14 +161,14 @@ function updateCartUI() {
       }
     });
   });
-}
 
-// Change quantity from cart
-function changeQuantity(id, delta) {
-  if (!cart[id]) return;
-  cart[id].qty += delta;
-  if (cart[id].qty <= 0) delete cart[id];
-  updateCartUI();
+  // Update product card quantity display
+  products.forEach(p => {
+    const qtyEl = document.getElementById(`qty-${p.id}`);
+    qtyEl.textContent = '0';
+    const addBtn = document.querySelector(`.add-btn[data-id="${p.id}"]`);
+    if (addBtn) addBtn.disabled = true;
+  });
 }
 
 // Cart toggle
@@ -175,7 +180,7 @@ document.getElementById('close-cart').addEventListener('click', () => {
   document.getElementById('cart-panel').style.display = 'none';
 });
 
-// WhatsApp Checkout
+// WhatsApp Checkout with Free Shipping
 const MIN_SHIPPING = 50;
 const FREE_SHIPPING_LIMIT = 500;
 
@@ -208,13 +213,12 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
   msg += `Total: ₹${total.toFixed(2)}\n\n`;
   msg += `👤 Name: ${name}\n🏠 Address/Note: ${note}`;
   msg += `\nPlease share the payment details`;
-
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
-  window.open(url, '_blank');
+window.open(`${WHATSAPP_LINK}?text=${encodeURIComponent(msg)}`, '_blank');
 });
 
 // Scroll down button
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
   const scrollBtn = document.getElementById('scroll-btn');
   if (scrollBtn) {
     scrollBtn.addEventListener('click', () => {

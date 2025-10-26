@@ -3,25 +3,27 @@
     "id": "p1",
     "name": "Charm Bracelet",
     "price": 79,
-    "description": "A cute gift item #1 — perfect for small surprises.",
+    "description": "Char with bracelet #1 — perfect for small surprises.",
     "images": [
       "images/Bracelet.JPG",
-      "images/product1.svg"
     ]
   },
   {
     "id": "p2",
-    "name": "Pretty Gift 2",
-    "price": 297,
-    "description": "A cute gift item #2 — perfect for small surprises.",
-    "images": ["images/product2.svg"]
+    "name": "Facechanging Keychain",
+    "price": 89,
+    "description": " #2 — latest gift.",
+    "images": ["images/Facechanging",
+      "images/Facechanging1",
+      "images/FacechangingA"
+    ]
   },
   {
     "id": "p3",
-    "name": "Pretty Gift 3",
-    "price": 346,
-    "description": "A cute gift item #3 — perfect for small surprises.",
-    "images": ["images/product3.svg"]
+    "name": "Projector Camera",
+    "price": 89,
+    "description": "gift item #3 — memories of childhood toys.",
+    "images": ["images/Projector1"]
   },
   {
     "id": "p4",

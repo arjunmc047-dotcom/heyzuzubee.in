@@ -4,8 +4,12 @@
     "name": "Pretty Gift 1",
     "price": 248,
     "description": "A cute gift item #1 \u2014 perfect for small surprises.",
-    "image": "images/product1.svg"
-  },
+    "image": [
+    "images/product1a.svg",
+    "images/product1b.svg",
+    "images/product1c.svg"
+  ]
+  };
   {
     "id": "p2",
     "name": "Pretty Gift 2",

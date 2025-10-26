@@ -25,42 +25,42 @@
   {
     "id": "p4",
     "name": "Pretty Gift 4",
-    "price": ,
+    "price": 0,
     "description": " item #4 — coming soon.",
     "images": ["images/comingsoon.jpg"]
   },
   {
     "id": "p5",
     "name": "Pretty Gift 5",
-    "price": ,
+    "price": 0,
     "description": " item #5 — coming soon.",
     "images": ["images/comingsoon.jpg"]
   },
   {
     "id": "p6",
     "name": "Pretty Gift 6",
-    "price": ,
+    "price": 0,
     "description": " item #6 — coming soon.",
     "images": ["images/comingsoon.jpg"]
   },
   {
     "id": "p7",
     "name": "Pretty Gift 7",
-    "price": ,
+    "price": 0 ,
     "description": " item #7 — coming soon.",
     "images": ["images/comingsoon.jpg"]
   },
   {
     "id": "p8",
     "name": "Pretty Gift 8",
-    "price": ,
+    "price": 0,
     "description": " item #8 — coming soon.",
     "images": ["images/comingsoon.jpg"]
   },
   {
     "id": "p9",
     "name": "Pretty Gift 9",
-    "price": ,
+    "price": 0,
     "description": " item #9 — coming soon.",
     "images": ["images/comingsoon.jpg"]
   }

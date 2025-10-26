@@ -213,7 +213,6 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
   msg += `Total: ₹${total.toFixed(2)}\n\n`;
   msg += `👤 Name: ${name}\n🏠 Address/Note: ${note}`;
   msg += `\nPlease share the payment details`;
-  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
 window.open(`${WHATSAPP_LINK}?text=${encodeURIComponent(msg)}`, '_blank');
 });
 

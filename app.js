@@ -233,15 +233,16 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
   const shipping = subtotal === 0 ? 0 : (subtotal >= FREE_SHIPPING_LIMIT ? 0 : MIN_SHIPPING);
   const total = subtotal + shipping;
 
-  // Build WhatsApp message
-  let msg = '🛍️ *Order from ZuZuBee*\n\n';
-  cartItems.forEach(item => {
-    msg += `• ${item.name} x ${item.qty} = ₹${(item.qty * item.price).toFixed(2)}\n`;
+  let msg = 'Welcome to ZuZuBee\n';
+  msg += 'Please find the order below\n';
+  Object.values(cart).forEach(item => {
+    msg += `* ${item.name} x ${item.qty} = ₹${(item.qty * item.price).toFixed(2)}\n`;
   });
-  if (subtotal > 0) msg += `\nShipping: ₹${shipping}\n`;
-  if (subtotal > 0) msg += `Total: ₹${total.toFixed(2)}\n\n`;
-  msg += `👤 Name: ${name}\n🏠 Address/Note: ${note}`;
-  msg += `\nPlease share the payment details`;
+  if (Object.keys(cart).length > 0) msg += `\nShipping: ₹${shipping}\n`;
+  msg += `Total: ₹${total.toFixed(2)}\n\n`;
+  msg += `👤 Name: ${name}\n`;
+  msg += `🏠 Address/Note: ${note}\n\n`;
+  msg += 'Please share the payment details also for order';
 
   const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
   window.open(whatsappURL, '_blank');

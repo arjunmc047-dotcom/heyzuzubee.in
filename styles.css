@@ -348,9 +348,8 @@ body {
 }
 
 .social-widget .social-icons a img {
-    width: 60%;
-    height: 60%;
-    object-fit: contain;
+  width: 60%;
+  height: 60%;
 }
 
 .social-widget .social-icons a:hover {

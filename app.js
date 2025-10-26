@@ -2,10 +2,10 @@ const WHATSAPP_NUMBER = "919061637881";
 let products = [];
 let cart = {};
 
-// Load products from JSON (GitHub Pages safe)
+// Load products from JSON
 async function loadProducts() {
   try {
-    const res = await fetch('./products.json'); // Ensure products.json is in same folder
+    const res = await fetch('./products.json');
     if (!res.ok) throw new Error('Failed to fetch products.json');
     products = await res.json();
     renderProducts();
@@ -24,7 +24,7 @@ function renderProducts() {
     const el = document.createElement('article');
     el.className = 'card';
 
-    // Create image slider container
+    // Create image slider
     const imagesHtml = p.images.map((img, index) => `
       <img src="${img}" class="slide ${index === 0 ? 'active' : ''}" alt="${p.name}">
     `).join('');
@@ -48,12 +48,12 @@ function renderProducts() {
     container.appendChild(el);
   });
 
-  // Add functionality for Add buttons
+  // Add button listeners
   document.querySelectorAll('.add-btn').forEach(btn => {
     btn.addEventListener('click', e => addToCart(e.currentTarget.dataset.id));
   });
 
-  // Add functionality for image sliders
+  // Image slider navigation
   document.querySelectorAll('.slider').forEach(slider => {
     const slides = slider.querySelectorAll('.slide');
     let current = 0;
@@ -71,15 +71,6 @@ function renderProducts() {
     });
   });
 }
-    `;
-    container.appendChild(el);
-  });
-
-  // Attach add button listeners
-  document.querySelectorAll('.add-btn').forEach(btn => {
-    btn.addEventListener('click', e => addToCart(e.currentTarget.dataset.id));
-  });
-}
 
 // Add item to cart
 function addToCart(id) {
@@ -90,7 +81,7 @@ function addToCart(id) {
   updateCartUI();
 }
 
-// Update cart panel UI
+// Update cart panel
 function updateCartUI() {
   const count = Object.values(cart).reduce((s, i) => s + i.qty, 0);
   document.getElementById('cart-count').textContent = count;
@@ -120,7 +111,7 @@ function updateCartUI() {
     itemsDiv.appendChild(node);
   });
 
-  // Attach plus/minus buttons
+  // Quantity buttons
   itemsDiv.querySelectorAll('button').forEach(btn => {
     btn.addEventListener('click', e => {
       const id = e.currentTarget.dataset.id;
@@ -135,9 +126,21 @@ function updateCartUI() {
       updateCartUI();
     });
   });
+
+  // Update product card quantity display
+  Object.keys(cart).forEach(id => {
+    const qtyEl = document.getElementById(`qty-${id}`);
+    if (qtyEl) qtyEl.textContent = cart[id].qty;
+  });
+  products.forEach(p => {
+    if (!cart[p.id]) {
+      const qtyEl = document.getElementById(`qty-${p.id}`);
+      if (qtyEl) qtyEl.textContent = '0';
+    }
+  });
 }
 
-// Cart panel toggle
+// Cart toggle
 document.getElementById('cart-btn').addEventListener('click', () => {
   const panel = document.getElementById('cart-panel');
   panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
@@ -146,7 +149,7 @@ document.getElementById('close-cart').addEventListener('click', () => {
   document.getElementById('cart-panel').style.display = 'none';
 });
 
-// WhatsApp checkout
+// Checkout via WhatsApp
 document.getElementById('checkout-btn').addEventListener('click', () => {
   if (Object.keys(cart).length === 0) {
     alert('Cart is empty!');
@@ -168,23 +171,21 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
   window.open(url, '_blank');
 });
 
-// Scroll arrow & down key
+// Scroll down button
 document.addEventListener('DOMContentLoaded', function() {
   const scrollBtn = document.getElementById('scroll-btn');
   if (scrollBtn) {
     scrollBtn.addEventListener('click', () => {
-      const productsSection = document.getElementById('products');
-      productsSection.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
     });
   }
 
   document.addEventListener('keydown', e => {
     if (e.key === "ArrowDown") {
-      const productsSection = document.getElementById('products');
-      productsSection.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
     }
   });
 });
 
-// Initialize
+// Init
 loadProducts();

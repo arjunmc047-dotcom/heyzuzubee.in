@@ -1,4 +1,7 @@
 const WHATSAPP_LINK = "https://bit.ly/Chatwithzuzubee";
+const MIN_SHIPPING = 50;
+const FREE_SHIPPING_LIMIT = 500;
+
 let products = [];
 let cart = {};
 
@@ -49,7 +52,7 @@ function renderProducts() {
     container.appendChild(el);
   });
 
-  // Quantity + / − buttons on product cards
+  // Quantity + / − buttons in product card
   document.querySelectorAll('.increase').forEach(btn => {
     btn.addEventListener('click', e => {
       const id = e.currentTarget.dataset.id;
@@ -79,7 +82,7 @@ function renderProducts() {
   // Initialize Add buttons as disabled
   document.querySelectorAll('.add-btn').forEach(btn => btn.disabled = true);
 
-  // Add button listener
+  // Add button to add products to cart
   document.querySelectorAll('.add-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       const id = e.currentTarget.dataset.id;
@@ -112,7 +115,7 @@ function renderProducts() {
   });
 }
 
-// Add item to cart
+// Add product to cart
 function addToCart(id, quantity) {
   const product = products.find(x => x.id === id);
   if (!product) return;
@@ -121,26 +124,32 @@ function addToCart(id, quantity) {
   updateCartUI();
 }
 
-// Change quantity from cart panel
-function changeCartQuantity(id, delta) {
+// Change quantity in cart panel
+function changeQuantity(id, delta) {
   if (!cart[id]) return;
   cart[id].qty += delta;
-  if (cart[id].qty <= 0) {
-    delete cart[id];
-  }
+  if (cart[id].qty <= 0) delete cart[id];
   updateCartUI();
 }
 
-// Update cart panel and sync with product cards
+// Remove product from cart
+function removeFromCart(id) {
+  delete cart[id];
+  updateCartUI();
+}
+
+// Update cart UI
 function updateCartUI() {
-  const count = Object.values(cart).reduce((s, i) => s + i.qty, 0);
-  document.getElementById('cart-count').textContent = count;
-
-  const total = Object.values(cart).reduce((s, i) => s + i.qty * i.price, 0);
-  document.getElementById('cart-total').textContent = total.toFixed(2);
-
   const itemsDiv = document.getElementById('cart-items');
   itemsDiv.innerHTML = '';
+
+  const subtotal = Object.values(cart).reduce((s, i) => s + i.qty * i.price, 0);
+  const shipping = subtotal >= FREE_SHIPPING_LIMIT ? 0 : (subtotal > 0 ? MIN_SHIPPING : 0);
+  const total = subtotal + shipping;
+
+  // Update cart count
+  const count = Object.values(cart).reduce((s, i) => s + i.qty, 0);
+  document.getElementById('cart-count').textContent = count;
 
   Object.values(cart).forEach(item => {
     const node = document.createElement('div');
@@ -152,42 +161,41 @@ function updateCartUI() {
       </div>
       <div style="text-align:right">
         <div>₹${(item.price * item.qty).toFixed(2)}</div>
-        <div style="margin-top:6px">
-          <button class="btn" data-op="minus" data-id="${item.id}">-</button>
+        <div style="margin-top:6px; display:flex; gap:4px; justify-content:flex-end">
+          <button class="btn" data-op="minus" data-id="${item.id}">−</button>
           <button class="btn" data-op="plus" data-id="${item.id}">+</button>
-          <button class="btn" data-op="remove" data-id="${item.id}">Remove</button>
+          <button class="btn remove" data-id="${item.id}" style="background:red;color:white">Remove</button>
         </div>
       </div>
     `;
     itemsDiv.appendChild(node);
   });
 
-  // Cart panel buttons
+  // Cart buttons
   itemsDiv.querySelectorAll('button').forEach(btn => {
-    btn.addEventListener('click', e => {
-      const id = e.currentTarget.dataset.id;
-      const op = e.currentTarget.dataset.op;
-      if (op === 'minus') changeCartQuantity(id, -1);
-      else if (op === 'plus') changeCartQuantity(id, 1);
-      else if (op === 'remove') {
-        delete cart[id];
-        updateCartUI();
-      }
-    });
-  });
-
-  // Sync quantities with product cards
-  products.forEach(p => {
-    const qtyEl = document.getElementById(`qty-${p.id}`);
-    const addBtn = document.querySelector(`.add-btn[data-id="${p.id}"]`);
-    if (cart[p.id]) {
-      qtyEl.textContent = cart[p.id].qty;
-      addBtn.disabled = false;
-    } else {
-      qtyEl.textContent = '0';
-      addBtn.disabled = true;
+    const id = btn.dataset.id;
+    if (btn.classList.contains('remove')) {
+      btn.addEventListener('click', () => removeFromCart(id));
+    } else if (btn.dataset.op === 'minus') {
+      btn.addEventListener('click', () => changeQuantity(id, -1));
+    } else if (btn.dataset.op === 'plus') {
+      btn.addEventListener('click', () => changeQuantity(id, 1));
     }
   });
+
+  // Update product card qty and add button
+  products.forEach(p => {
+    const qtyEl = document.getElementById(`qty-${p.id}`);
+    qtyEl.textContent = '0';
+    const addBtn = document.querySelector(`.add-btn[data-id="${p.id}"]`);
+    if (addBtn) addBtn.disabled = true;
+  });
+
+  // Update cart totals with shipping
+  document.getElementById('cart-total').textContent = total.toFixed(2);
+
+  // Optionally, display shipping separately if you want:
+  // You can add a small div inside cart-panel for shipping if needed
 }
 
 // Cart toggle
@@ -199,10 +207,7 @@ document.getElementById('close-cart').addEventListener('click', () => {
   document.getElementById('cart-panel').style.display = 'none';
 });
 
-// WhatsApp Checkout with Free Shipping
-const MIN_SHIPPING = 50;
-const FREE_SHIPPING_LIMIT = 500;
-
+// Checkout to WhatsApp
 document.getElementById('checkout-btn').addEventListener('click', () => {
   if (Object.keys(cart).length === 0) {
     alert('Cart is empty!');
@@ -217,11 +222,9 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
     return;
   }
 
-  let subtotal = Object.values(cart).reduce((s, i) => s + i.qty * i.price, 0);
-  let shipping = subtotal >= FREE_SHIPPING_LIMIT ? 0 : MIN_SHIPPING;
-  let total = subtotal + shipping;
-
-  document.getElementById('cart-total').textContent = total.toFixed(2);
+  const subtotal = Object.values(cart).reduce((s, i) => s + i.qty * i.price, 0);
+  const shipping = subtotal >= FREE_SHIPPING_LIMIT ? 0 : (subtotal > 0 ? MIN_SHIPPING : 0);
+  const total = subtotal + shipping;
 
   let msg = '🛍️ *Order from ZuZuBee*\n\n';
   Object.values(cart).forEach(item => {
@@ -230,10 +233,12 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
   msg += `\nSubtotal: ₹${subtotal.toFixed(2)}\n`;
   msg += shipping === 0 ? 'Shipping: Free 🚚\n' : `Shipping: ₹${shipping.toFixed(2)}\n`;
   msg += `Total: ₹${total.toFixed(2)}\n\n`;
-  msg += `👤 Name: ${name}\n🏠 Address/Note: ${note}`;
-  msg += `\nPlease share the payment details`;
+  msg += `👤 Name: ${name}\n🏠 Address/Note: ${note}\nPlease share the payment details`;
 
-  window.open(`${WHATSAPP_LINK}?text=${encodeURIComponent(msg)}`, '_blank');
+ 
+  // Open WhatsApp with pre-filled message
+  const waUrl = `${WHATSAPP_LINK}?text=${encodeURIComponent(msg)}`;
+  window.open(waUrl, '_blank');
 });
 
 // Scroll down button
@@ -252,5 +257,5 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// Init
+// Initialize
 loadProducts();

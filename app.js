@@ -29,7 +29,7 @@ function renderProducts() {
       <img src="${img}" class="slide ${index === 0 ? 'active' : ''}" alt="${p.name}">
     `).join('');
 
-    // Create product card with + / - buttons
+    // Product card HTML with + / − and Add button
     el.innerHTML = `
       <div class="slider" data-id="${p.id}">
         ${imagesHtml}
@@ -42,21 +42,42 @@ function renderProducts() {
         <div>₹${p.price.toFixed(2)}</div>
         <div class="qty-controls">
           <button class="btn decrease" data-id="${p.id}">−</button>
-          <span class="item-qty" id="qty-${p.id}">0</span>
+          <span class="item-qty" id="qty-${p.id}">1</span>
           <button class="btn increase" data-id="${p.id}">+</button>
+          <button class="btn add-btn" data-id="${p.id}">Add</button>
         </div>
       </div>
     `;
     container.appendChild(el);
   });
 
-  // Quantity control listeners (+ / -)
+  // Quantity buttons (+ / −)
   document.querySelectorAll('.increase').forEach(btn => {
-    btn.addEventListener('click', e => changeQuantity(e.currentTarget.dataset.id, 1));
+    btn.addEventListener('click', e => {
+      const id = e.currentTarget.dataset.id;
+      const qtyEl = document.getElementById(`qty-${id}`);
+      let qty = parseInt(qtyEl.textContent);
+      qtyEl.textContent = qty + 1;
+    });
   });
 
   document.querySelectorAll('.decrease').forEach(btn => {
-    btn.addEventListener('click', e => changeQuantity(e.currentTarget.dataset.id, -1));
+    btn.addEventListener('click', e => {
+      const id = e.currentTarget.dataset.id;
+      const qtyEl = document.getElementById(`qty-${id}`);
+      let qty = parseInt(qtyEl.textContent);
+      if (qty > 1) qtyEl.textContent = qty - 1;
+    });
+  });
+
+  // Add to Cart button
+  document.querySelectorAll('.add-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const id = e.currentTarget.dataset.id;
+      const qtyEl = document.getElementById(`qty-${id}`);
+      const quantity = parseInt(qtyEl.textContent);
+      addToCart(id, quantity);
+    });
   });
 
   // Image slider navigation
@@ -78,17 +99,18 @@ function renderProducts() {
   });
 }
 
-// Change quantity of product from product section
-function changeQuantity(id, delta) {
+// Add item to cart (with selected quantity)
+function addToCart(id, quantity) {
   const product = products.find(x => x.id === id);
   if (!product) return;
 
   if (!cart[id]) {
-    if (delta > 0) cart[id] = { ...product, qty: 1 };
-  } else {
-    cart[id].qty += delta;
-    if (cart[id].qty <= 0) delete cart[id];
+    cart[id] = { ...product, qty: 0 };
   }
+  cart[id].qty += quantity;
+
+  // Reset product card quantity to 1 after adding
+  document.getElementById(`qty-${id}`).textContent = 1;
 
   updateCartUI();
 }
@@ -134,12 +156,14 @@ function updateCartUI() {
       }
     });
   });
+}
 
-  // Update product card quantity display
-  products.forEach(p => {
-    const qtyEl = document.getElementById(`qty-${p.id}`);
-    qtyEl.textContent = cart[p.id] ? cart[p.id].qty : '0';
-  });
+// Change quantity from cart
+function changeQuantity(id, delta) {
+  if (!cart[id]) return;
+  cart[id].qty += delta;
+  if (cart[id].qty <= 0) delete cart[id];
+  updateCartUI();
 }
 
 // Cart toggle
@@ -151,9 +175,9 @@ document.getElementById('close-cart').addEventListener('click', () => {
   document.getElementById('cart-panel').style.display = 'none';
 });
 
-// === WhatsApp Checkout with Free Shipping ===
-const MIN_SHIPPING = 50; // Default shipping charge
-const FREE_SHIPPING_LIMIT = 500; // Free shipping threshold
+// WhatsApp Checkout
+const MIN_SHIPPING = 50;
+const FREE_SHIPPING_LIMIT = 500;
 
 document.getElementById('checkout-btn').addEventListener('click', () => {
   if (Object.keys(cart).length === 0) {
@@ -183,13 +207,14 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
   msg += shipping === 0 ? 'Shipping: Free 🚚\n' : `Shipping: ₹${shipping.toFixed(2)}\n`;
   msg += `Total: ₹${total.toFixed(2)}\n\n`;
   msg += `👤 Name: ${name}\n🏠 Address/Note: ${note}`;
-  msg += `\n\nPlease share the payment details`;
+  msg += `\nPlease share the payment details`;
+
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
 });
 
 // Scroll down button
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
   const scrollBtn = document.getElementById('scroll-btn');
   if (scrollBtn) {
     scrollBtn.addEventListener('click', () => {

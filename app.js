@@ -138,19 +138,18 @@ function removeFromCart(id) {
   updateCartUI();
 }
 
+// Update Cart UI
 function updateCartUI() {
-  const count = Object.values(cart).reduce((s, i) => s + i.qty, 0);
-  document.getElementById('cart-count').textContent = count;
-
-  const subtotal = Object.values(cart).reduce((s, i) => s + i.qty * i.price, 0);
-  const shipping = subtotal >= FREE_SHIPPING_LIMIT || subtotal === 0 ? 0 : MIN_SHIPPING;
-  const total = subtotal + shipping;
-
   const itemsDiv = document.getElementById('cart-items');
   itemsDiv.innerHTML = '';
 
+  const cartItems = Object.values(cart);
+  const subtotal = cartItems.reduce((s, i) => s + i.qty * i.price, 0);
+  const shipping = subtotal === 0 ? 0 : (subtotal >= FREE_SHIPPING_LIMIT ? 0 : MIN_SHIPPING);
+  const total = subtotal + shipping;
+
   // Render products in cart
-  Object.values(cart).forEach(item => {
+  cartItems.forEach(item => {
     const node = document.createElement('div');
     node.className = 'cart-item';
     node.innerHTML = `
@@ -169,21 +168,26 @@ function updateCartUI() {
     itemsDiv.appendChild(node);
   });
 
-  // Add shipping breakdown line **only if cart has products**
+  // Shipping line
   if (subtotal > 0) {
     const shippingLine = document.createElement('div');
-    shippingLine.className = 'cart-item cart-shipping';
-    shippingLine.innerHTML = `Shipping: ₹${shipping}`;
+    shippingLine.className = 'cart-item';
+    shippingLine.innerHTML = `<strong>Shipping:</strong> ₹${shipping}`;
     itemsDiv.appendChild(shippingLine);
   }
 
-  // Add total line
-  const totalLine = document.createElement('div');
-  totalLine.className = 'cart-item';
-  totalLine.innerHTML = `<strong>Total:</strong> ₹${total.toFixed(2)}`;
-  itemsDiv.appendChild(totalLine);
+  // Total line
+  if (subtotal > 0) {
+    const totalLine = document.createElement('div');
+    totalLine.className = 'cart-item';
+    totalLine.innerHTML = `<strong>Total:</strong> ₹${total.toFixed(2)}`;
+    itemsDiv.appendChild(totalLine);
+  }
 
-  // Cart panel buttons
+  // Cart count
+  document.getElementById('cart-count').textContent = cartItems.reduce((s, i) => s + i.qty, 0);
+
+  // Add event listeners to cart buttons
   itemsDiv.querySelectorAll('button').forEach(btn => {
     const id = btn.dataset.id;
     if (btn.dataset.op === 'minus') btn.addEventListener('click', () => changeQuantity(id, -1));
@@ -224,19 +228,21 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
     return;
   }
 
-  const subtotal = Object.values(cart).reduce((s, i) => s + i.qty * i.price, 0);
-  const shipping = subtotal >= FREE_SHIPPING_LIMIT ? 0 : MIN_SHIPPING;
+  const cartItems = Object.values(cart);
+  const subtotal = cartItems.reduce((s, i) => s + i.qty * i.price, 0);
+  const shipping = subtotal === 0 ? 0 : (subtotal >= FREE_SHIPPING_LIMIT ? 0 : MIN_SHIPPING);
   const total = subtotal + shipping;
 
   // Build WhatsApp message
   let msg = '🛍️ *Order from ZuZuBee*\n\n';
-  Object.values(cart).forEach(item => {
+  cartItems.forEach(item => {
     msg += `• ${item.name} x ${item.qty} = ₹${(item.qty * item.price).toFixed(2)}\n`;
   });
-  msg += `\nShipping: ₹${shipping === 0 ? 0 : shipping}\n`;
-  msg += `Total: ₹${total.toFixed(2)}\n\n`;
+  if (subtotal > 0) msg += `\nShipping: ₹${shipping}\n`;
+  if (subtotal > 0) msg += `Total: ₹${total.toFixed(2)}\n\n`;
   msg += `👤 Name: ${name}\n🏠 Address/Note: ${note}`;
   msg += `\nPlease share the payment details`;
+
   const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
   window.open(whatsappURL, '_blank');
 });

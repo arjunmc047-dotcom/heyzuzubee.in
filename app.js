@@ -1,4 +1,4 @@
-const WHATSAPP_LINK = "https://bit.ly/Chatwithzuzubee";
+const WHATSAPP_NUMBER = "919061637881"; // your WhatsApp number
 const MIN_SHIPPING = 50;
 const FREE_SHIPPING_LIMIT = 500;
 
@@ -52,7 +52,7 @@ function renderProducts() {
     container.appendChild(el);
   });
 
-  // Quantity + / − buttons in product card
+  // Quantity + / − buttons
   document.querySelectorAll('.increase').forEach(btn => {
     btn.addEventListener('click', e => {
       const id = e.currentTarget.dataset.id;
@@ -82,7 +82,7 @@ function renderProducts() {
   // Initialize Add buttons as disabled
   document.querySelectorAll('.add-btn').forEach(btn => btn.disabled = true);
 
-  // Add button to add products to cart
+  // Add button listener
   document.querySelectorAll('.add-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       const id = e.currentTarget.dataset.id;
@@ -115,7 +115,7 @@ function renderProducts() {
   });
 }
 
-// Add product to cart
+// Add item to cart
 function addToCart(id, quantity) {
   const product = products.find(x => x.id === id);
   if (!product) return;
@@ -124,7 +124,7 @@ function addToCart(id, quantity) {
   updateCartUI();
 }
 
-// Change quantity in cart panel
+// Change quantity in cart
 function changeQuantity(id, delta) {
   if (!cart[id]) return;
   cart[id].qty += delta;
@@ -140,16 +140,17 @@ function removeFromCart(id) {
 
 // Update cart UI
 function updateCartUI() {
-  const itemsDiv = document.getElementById('cart-items');
-  itemsDiv.innerHTML = '';
-
-  const subtotal = Object.values(cart).reduce((s, i) => s + i.qty * i.price, 0);
-  const shipping = subtotal >= FREE_SHIPPING_LIMIT ? 0 : (subtotal > 0 ? MIN_SHIPPING : 0);
-  const total = subtotal + shipping;
-
-  // Update cart count
   const count = Object.values(cart).reduce((s, i) => s + i.qty, 0);
   document.getElementById('cart-count').textContent = count;
+
+  const subtotal = Object.values(cart).reduce((s, i) => s + i.qty * i.price, 0);
+  const shipping = subtotal >= FREE_SHIPPING_LIMIT ? 0 : MIN_SHIPPING;
+  const total = subtotal + shipping;
+
+  document.getElementById('cart-total').textContent = total.toFixed(2);
+
+  const itemsDiv = document.getElementById('cart-items');
+  itemsDiv.innerHTML = '';
 
   Object.values(cart).forEach(item => {
     const node = document.createElement('div');
@@ -157,45 +158,34 @@ function updateCartUI() {
     node.innerHTML = `
       <div style="flex:1">
         <strong>${item.name}</strong><br/>
-        <small>₹${item.price.toFixed(2)} × ${item.qty}</small>
+        <small>₹${item.price.toFixed(2)} × ${item.qty} = ₹${(item.price * item.qty).toFixed(2)}</small>
       </div>
       <div style="text-align:right">
-        <div>₹${(item.price * item.qty).toFixed(2)}</div>
-        <div style="margin-top:6px; display:flex; gap:4px; justify-content:flex-end">
-          <button class="btn" data-op="minus" data-id="${item.id}">−</button>
+        <div>
+          <button class="btn" data-op="minus" data-id="${item.id}">-</button>
           <button class="btn" data-op="plus" data-id="${item.id}">+</button>
-          <button class="btn remove" data-id="${item.id}" style="background:red;color:white">Remove</button>
+          <button class="btn" data-op="remove" data-id="${item.id}">Remove</button>
         </div>
       </div>
     `;
     itemsDiv.appendChild(node);
   });
 
-  // Cart buttons
+  // Cart panel buttons
   itemsDiv.querySelectorAll('button').forEach(btn => {
     const id = btn.dataset.id;
-    if (btn.classList.contains('remove')) {
-      btn.addEventListener('click', () => removeFromCart(id));
-    } else if (btn.dataset.op === 'minus') {
-      btn.addEventListener('click', () => changeQuantity(id, -1));
-    } else if (btn.dataset.op === 'plus') {
-      btn.addEventListener('click', () => changeQuantity(id, 1));
-    }
+    if (btn.dataset.op === 'minus') btn.addEventListener('click', () => changeQuantity(id, -1));
+    else if (btn.dataset.op === 'plus') btn.addEventListener('click', () => changeQuantity(id, 1));
+    else if (btn.dataset.op === 'remove') btn.addEventListener('click', () => removeFromCart(id));
   });
 
-  // Update product card qty and add button
+  // Reset product card qty and Add button
   products.forEach(p => {
     const qtyEl = document.getElementById(`qty-${p.id}`);
     qtyEl.textContent = '0';
     const addBtn = document.querySelector(`.add-btn[data-id="${p.id}"]`);
     if (addBtn) addBtn.disabled = true;
   });
-
-  // Update cart totals with shipping
-  document.getElementById('cart-total').textContent = total.toFixed(2);
-
-  // Optionally, display shipping separately if you want:
-  // You can add a small div inside cart-panel for shipping if needed
 }
 
 // Cart toggle
@@ -223,37 +213,30 @@ document.getElementById('checkout-btn').addEventListener('click', () => {
   }
 
   const subtotal = Object.values(cart).reduce((s, i) => s + i.qty * i.price, 0);
-  const shipping = subtotal >= FREE_SHIPPING_LIMIT ? 0 : (subtotal > 0 ? MIN_SHIPPING : 0);
+  const shipping = subtotal >= FREE_SHIPPING_LIMIT ? 0 : MIN_SHIPPING;
   const total = subtotal + shipping;
 
+  // Build WhatsApp message
   let msg = '🛍️ *Order from ZuZuBee*\n\n';
   Object.values(cart).forEach(item => {
-    msg += `• ${item.name} x ${item.qty} = ₹${(item.price * item.qty).toFixed(2)}\n`;
+    msg += `• ${item.name} x ${item.qty} = ₹${(item.qty * item.price).toFixed(2)}\n`;
   });
-  msg += `\nSubtotal: ₹${subtotal.toFixed(2)}\n`;
-  msg += shipping === 0 ? 'Shipping: Free 🚚\n' : `Shipping: ₹${shipping.toFixed(2)}\n`;
+  msg += `\nShipping: ₹${shipping === 0 ? 0 : shipping}\n`;
   msg += `Total: ₹${total.toFixed(2)}\n\n`;
-  msg += `👤 Name: ${name}\n🏠 Address/Note: ${note}\nPlease share the payment details`;
-
- 
-  // Open WhatsApp with pre-filled message
-  const waUrl = `${WHATSAPP_LINK}?text=${encodeURIComponent(msg)}`;
-  window.open(waUrl, '_blank');
+  msg += `👤 Name: ${name}\n🏠 Address/Note: ${note}`;
+  msg += `\nPlease share the payment details`;
+  const whatsappURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+  window.open(whatsappURL, '_blank');
 });
 
-// Scroll down button
+// Scroll down
 document.addEventListener('DOMContentLoaded', function() {
   const scrollBtn = document.getElementById('scroll-btn');
-  if (scrollBtn) {
-    scrollBtn.addEventListener('click', () => {
-      document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
-    });
-  }
-
+  if (scrollBtn) scrollBtn.addEventListener('click', () => {
+    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+  });
   document.addEventListener('keydown', e => {
-    if (e.key === "ArrowDown") {
-      document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
-    }
+    if (e.key === "ArrowDown") document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
   });
 });
 

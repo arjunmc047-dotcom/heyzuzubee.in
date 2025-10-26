@@ -138,7 +138,6 @@ function removeFromCart(id) {
   updateCartUI();
 }
 
-// Update cart UI
 function updateCartUI() {
   const count = Object.values(cart).reduce((s, i) => s + i.qty, 0);
   document.getElementById('cart-count').textContent = count;
@@ -147,11 +146,10 @@ function updateCartUI() {
   const shipping = subtotal >= FREE_SHIPPING_LIMIT ? 0 : MIN_SHIPPING;
   const total = subtotal + shipping;
 
-  document.getElementById('cart-total').textContent = total.toFixed(2);
-
   const itemsDiv = document.getElementById('cart-items');
   itemsDiv.innerHTML = '';
 
+  // Render products in cart
   Object.values(cart).forEach(item => {
     const node = document.createElement('div');
     node.className = 'cart-item';
@@ -171,6 +169,18 @@ function updateCartUI() {
     itemsDiv.appendChild(node);
   });
 
+  // Add shipping breakdown line
+  const shippingLine = document.createElement('div');
+  shippingLine.className = 'cart-item';
+  shippingLine.innerHTML = `<strong>Shipping:</strong> ₹${shipping}`;
+  itemsDiv.appendChild(shippingLine);
+
+  // Add total line
+  const totalLine = document.createElement('div');
+  totalLine.className = 'cart-item';
+  totalLine.innerHTML = `<strong>Total:</strong> ₹${total.toFixed(2)}`;
+  itemsDiv.appendChild(totalLine);
+
   // Cart panel buttons
   itemsDiv.querySelectorAll('button').forEach(btn => {
     const id = btn.dataset.id;
@@ -187,7 +197,6 @@ function updateCartUI() {
     if (addBtn) addBtn.disabled = true;
   });
 }
-
 // Cart toggle
 document.getElementById('cart-btn').addEventListener('click', () => {
   const panel = document.getElementById('cart-panel');
